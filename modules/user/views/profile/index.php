@@ -1,11 +1,12 @@
 <?php
 
 use app\assets\ProfileAsset;
+use app\models\User;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 ProfileAsset::register($this);
-$guest = Yii::$app->user->identity;
+$guest = User::findOne(Yii::$app->user->getId());
 $isOwner = ($user->getId() === $guest->getId());
 ?>
 
@@ -53,13 +54,48 @@ $isOwner = ($user->getId() === $guest->getId());
             <div>
                 <a class="btn btn-success" href="/user/chat/all">Chats</a>
             </div>
+            <div>
+                <a class="btn btn-success" href="/user/friends/all">Friends</a>
+            </div>
 
         <?php else : ?>
             <div>
-                <a href="/user/chat/create?id=<?= $user->id?>" class="btn btn-success">Send message</a><br>
-                <a href="" class="btn btn-success">Send invite</a><br>
+                <a href="/user/chat/create?id=<?= $user->id ?>" class="btn btn-success">Send message</a><br>
             </div>
         <?php endif; ?>
+
+        <?php if (!$isOwner && !$guest->isInvited($user->id) && !$guest->isBro($user->id)): ?>
+            <?php $form = ActiveForm::begin([
+                'id' => 'send_invite_form_' . $user->id,
+                'method' => 'post',
+                'action' => '/user/friends/invite'
+            ]) ?>
+
+            <?= $form->field($inviteModel, 'from_user')->hiddenInput(['value' => $guest->id])->label(false) ?>
+            <?= $form->field($inviteModel, 'to_user')->hiddenInput(['value' => $user->id])->label(false) ?>
+
+            <div>
+                <?= Html::submitButton('Send invite', ['class' => 'btn btn-success','onclick' => 'send_invite(' . $user->id . ')']) ?>
+            </div>
+
+            <?php ActiveForm::end() ?>
+        <?php endif; ?>
+
+        <?php if (!$isOwner && $guest->isInvited($user->id)): ?>
+            <div>
+                <button onclick="delete_invite(<?= $user->id ?>,<?= $guest->id ?>)" class="btn btn-default">Cancel invite
+                </button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!$isOwner && $guest->isBro($user->id)): ?>
+            <div>
+                <button onclick="delete_friend(<?= $guest->id ?>,<?= $user->id ?>)" class="btn btn-default">
+                    delete from friends
+                </button>
+            </div>
+        <?php endif; ?>
+
     </div>
 
 
@@ -185,7 +221,7 @@ $isOwner = ($user->getId() === $guest->getId());
                     <div class="wall-article-comment">
 
                         <div class="wall-article-comment-author">
-                            <a href="/user/profile?id=<?= $comment->author_id ?>">
+                            <a href="/user/profile?id=<?= $comment->author_id ?>&">
                                 <img src="/img/avatars/<?= $comment->author_avatar ?>"></a> <br>
                             <p><?= $comment->author_name ?></p>
                             <p><?= $comment->created_at ?></p>
@@ -259,10 +295,5 @@ $isOwner = ($user->getId() === $guest->getId());
 
 </body>
 
-
-
-<script>
-
-</script>
 
 
