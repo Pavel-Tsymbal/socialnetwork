@@ -53,6 +53,37 @@ class UserService
     }
 
     /**
+     * @param $model
+     * @param $user
+     * @param $params
+     * @return bool
+     * @throws \yii\base\Exception
+     */
+    public function saveNewFromApi($model, $user, $params)
+    {
+        $model->name = $params['name'];
+        $model->login = $params['login'];
+        $model->email = $params['email'];
+        $model->password = $params['password'];
+        $model->confirm_password = $params['confirm_password'];
+        $model->birth_date = $params['birth_date'];
+        $model->gender = $params['gender'];
+
+        if($model->validate()) {
+            $user->name = $model->name;
+            $user->login = $model->login;
+            $user->email = $model->email;
+            $user->password = \Yii::$app->security->generatePasswordHash($model->password);
+            $user->birth_date = $model->birth_date;
+            $user->gender = $model->gender;
+
+            return $user->save();
+        }
+
+        return false;
+    }
+
+    /**
      * @param $role
      * @param $userId
      * @return \yii\rbac\Assignment
@@ -60,6 +91,10 @@ class UserService
      */
     public function setRole($role, $userId)
     {
+        $user = User::findOne($userId);
+        $user->role = $role;
+        $user->save();
+
         $auth = Yii::$app->authManager;
         $role = $auth->getRole($role);
         return $auth->assign($role, $userId);

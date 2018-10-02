@@ -10,6 +10,8 @@ use yii\db\ActiveRecord;
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
+
+
     public function getSettings() //получаю массив настроек
     {
         return $this->hasMany(UserSettings::className(), ['user_id' => 'id']);
