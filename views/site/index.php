@@ -10,5 +10,6 @@ $this->title = 'Socialnetwork';
    <?php if (!Yii::$app->user->isGuest): ?>
     <a href="/user/default/all" class="btn btn-success">All users</a>
    <?php endif; ?>
+    <a href="/news" class="btn btn-success">News</a>
 
 </div>

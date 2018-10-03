@@ -6,7 +6,7 @@
  * Time: 10:47
  */
 
-namespace app\actions;
+namespace app\actions\rolesActions;
 
 
 use app\controllers\RolesUserController;

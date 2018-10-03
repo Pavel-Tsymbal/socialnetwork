@@ -18,6 +18,12 @@ $config = [
         'user' => [
             'class' => 'app\modules\user\Module',
         ],
+        'news' => [
+            'class' => 'app\modules\news\Module',
+        ],
+        'api' => [
+            'class' => 'app\modules\api\Module',
+        ],
     ],
     'components' => [
         'cache' => [
@@ -51,10 +57,11 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'enableStrictParsing' => true,
+            'enableStrictParsing' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'test-user'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'roles-user']
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'roles-user'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'admin/api-news']
             ],
         ],
 

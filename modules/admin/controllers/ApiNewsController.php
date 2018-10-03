@@ -2,47 +2,46 @@
 /**
  * Created by PhpStorm.
  * User: pavel
- * Date: 02.10.18
- * Time: 10:28
+ * Date: 03.10.18
+ * Time: 10:13
  */
 
-namespace app\controllers;
+namespace app\modules\admin\controllers;
 
 
 
-use app\actions\rolesActions\RolesUserCreateAction;
-use app\actions\rolesActions\RolesUserDeleteAction;
-use app\actions\rolesActions\RolesUserUpdateAction;
-use app\models\User;
+use app\modules\admin\apiActions\newsActions\NewsCreateAction;
+use app\modules\admin\apiActions\newsActions\NewsDeleteAction;
+use app\modules\admin\apiActions\newsActions\NewsUpdateAction;
+use app\modules\news\models\News;
 use yii\rest\ActiveController;
 
-class RolesUserController extends ActiveController
+class ApiNewsController extends ActiveController
 {
-    public $modelClass = User::class;
+    public $modelClass = News::class;
 
     public function actions()
     {
         $actions = parent::actions();
 
         $actions['delete'] = [
-            'class' => RolesUserDeleteAction::class,
+            'class' => NewsDeleteAction::class,
             'modelClass' => $this->modelClass,
             'checkAccess' => [$this, 'checkAccess'],
         ];
 
         $actions['create'] = [
-            'class' => RolesUserCreateAction::class,
+            'class' => NewsCreateAction::class,
             'modelClass' => $this->modelClass,
             'checkAccess' => [$this, 'checkAccess'],
         ];
 
         $actions['update'] = [
-            'class' => RolesUserUpdateAction::class,
+            'class' => NewsUpdateAction::class,
             'modelClass' => $this->modelClass,
             'checkAccess' => [$this, 'checkAccess'],
         ];
 
         return $actions;
     }
-
 }
